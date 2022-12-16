@@ -8,7 +8,7 @@ tags: gcp learning cloud
 
 ---
 
-## Section 0: Preparation
+## Section 0: Fundamentals
 
 ### Cloud Computing
 - On Demand Computing (pool allocation by the provider)
@@ -17,7 +17,84 @@ tags: gcp learning cloud
 - flexible/elastic resources (scalability)
 - pay per use only
 
+#### IaaS (Infrastructure as a Service)
+- Compute
+- Storage
+- Network
+- pay for allocation
 
+#### PaaS (Platform as a Service)
+- more abstraction than IaaS
+- JRE, Database, Runtime, Development Stack
+- pay for usage
+
+#### SaaS (Software as a Service)
+- Service in the Cloud
+- consumed by internet users
+- e.g. gmail, dropbox etc.
+
+#### Serverless
+- Servers/Infrastructure managed by others
+- focus on code
+- Cloud Functions / Cloud Run
+
+### Google Network
+
+#### Locations
+- North America
+- South America
+- Europe
+- Asia
+- Australia
+
+#### Regions
+- independent geographic area
+- e.g. London, Frankfurt etc.
+- composed zones (1 region = 3 zones)
+
+#### Zones
+- separated spaces in one region
+- location where resources are deployed
+
+### Google Infrastructure Security
+
+#### Hardware
+- custom designed Hardware and Security Chips
+- Secure Boot Stack
+- Access Control for Datacenter
+
+#### Services
+- Encrypted Communication
+
+#### User
+- multi level security controls
+
+#### Internet Communication Layer
+- Front End Security
+- DoS Protection
+
+#### Operational Security Layer
+- Intrusion Detection
+- Reducing Insider Risks
+- enforces second factor security
+- Software Development best practises
+- Bug Bounty Program
+
+### Pricing and Billing
+- [Online Pricing Calculator](cloud.google.com/products/calculator)
+- defining Budgets to Account or Project level
+- create Alerts for thresholds
+- view reports and billing dashboards
+- quotas limit erroneous applications to produce unwanted load
+
+#### Quotas
+- applied to Project level
+- Rate Quotas
+    - reset after specific time
+    - e.g. 1000 requests/s (reset each second)
+- Allocation Quotas
+    - set max number of resources for project
+    - e.g. max 5 VPC's
 
 ---
 
