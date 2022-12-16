@@ -96,6 +96,136 @@ tags: gcp learning cloud
     - set max number of resources for project
     - e.g. max 5 VPC's
 
+### GCP Hierarchy
+1. Organization node (root node | overall policies)
+2. Folder (assign policies | create hierarchy e.g. business departments)
+3. Project (e.g. API, Billing, Collaborators, Google Services)
+    - Project ID (globally unique)
+    - Project Name (not unique)
+    - Project Number (internally used by google)
+4. Resources (belongs to one project | e.g. VM, Storage etc.)
+
+### IAM - Identity and Access Management
+- Google Account, Google Group, Service Account or Cloud Identity Domain
+- Controll Permissions by using Roles
+
+#### [Roles](https://cloud.google.com/iam/docs/understanding-roles)
+> = collections of permissions
+- Basic Role
+    - Owner (all permissions)
+    - Editor (read/write)
+    - Viewer (read only)
+    - Billing Admin (read only + billing)
+- Predefined Role
+    - typical job roles tailored to specific resources
+- Custom Role
+    - define custom tailored roles
+    - only applicable project or organization level
+
+### Service Accounts
+- functional/service user
+- Permissions defined by IAM Policies
+
+### Interactions with GCP
+- Google Cloud Console (GUI)
+- Google Cloud SDK and -Shell (gcloud, gsutil, bq)
+    - Cloud Shell (online shell via GUI)
+- API (programmatic interaction)
+- Cloud Mobile App (GUI for mobile devices)
+
+### VPC - Virtual Private Cloud
+> secure, individual, private cloud-computing model hosted in a public cloud
+
+- combines scalability of public cloud and data isolation of private cloud
+- segmenting networks
+- using firewall rules to restrict access
+- create static routes to forward traffic to specific destinations
+- VPC's are global and can have subnets (regional) worldwide
+- Routing Tables (forward traffic from/to instances)
+- Firewall (restrict access, rules by using tags e.g. `web` = 80,443 IN allow)
+- VPC Peering allows connection between VPC's to exchange traffic
+- Shared VPC tied to IAM policy
+- offers Load balancing
+
+#### Connect VPC to other Networks (e.g. On Premise)
+- VPN Connection
+- Direct Peering over PoP (Points of Presence)
+- Carrier Peering (if not already in PoP)
+    - On Premise Network Connection via Service Provider's Network
+    - not covered by Google SLA
+- Dedicated Interconnect (direct Connection to Google)
+- Partner Interconnect
+
+### Compute Engine - VM's
+- billed by second
+- utomatically applies sustained-use discount
+- committed-use discounts
+- Preemtible/Spot VM'ss
+    - Preemtible VM's up to 24h
+    - Spot VM's no max runtime
+
+### Cloud Load Balancing
+- distribute traffic over instances
+- managed Service by google
+- cross-region load balancing
+
+### Cloud DNS
+- managed DNS Service
+- low latency, highly availability
+
+### Cloud CDN (Content Delivery Network)
+- Edge Caching
+- low network latency
+- provide end user with content, quickly
+
+### Cloud Storage
+- Object Storage organized in Buckets
+- stored as binary (BLOB)
+- immutable
+- access via URL's (integrates well with web-technologies)
+- Use Cases
+    - Website Content
+    - Archival & Disaster Recovery
+    - Direct Download
+- Access Control via IAM Roles
+- Lifecycle control
+- Storage Types
+    - Standard (frequently accessed)
+    - Nearline (infrequently access data e.g. once a month)
+    - Coldline Storage (low cost of Nearline, access once every 90 days)
+    - Archive Storage (lowest cost, access once a year, disaster recovery)
+
+### Cloud SQL
+- fully managed relational Databases (e.g. MySQL, Postgres etc.)
+- auto patch / backups
+
+### Cloud Spanner
+- fully managed relational Database
+- scales horizontally
+- strongly consistent
+- "speaks" SQL with joins and secondary indexes
+- high availability
+- high IO per second
+
+### Cloud Firestore
+- NoSQL DB
+- Documents organized into collections
+- horizontally scalable
+- mobile, web and server development
+
+### Cloud BigTable
+- NoSQL big data database
+- handle massive workloads at low latency
+- Use Cases
+    - 1TB+ of (semi-)structured data
+    - high throughput or rapidly changing data
+    - NoSQL data
+    - time series or semantic ordering data
+    - asynchronous batch or synchronous real-time porocessing
+    - machine learning algorithms on data
+
+next up: introduction to containers
+
 ---
 
 ## Section 1: Designing highly scalable, available, and reliable cloud-native applications
