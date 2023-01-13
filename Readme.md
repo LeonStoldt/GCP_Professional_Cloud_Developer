@@ -384,6 +384,23 @@ tags: gcp learning cloud
 
 ---
 
+### Disaster Recovery
+- develop and test disaster recovery scenarios regularely
+- create recovery plans
+- e.g. Scenarios
+    - Zonal or Regional Failure
+    - Deployment Rollback
+    - Connectivity Failure
+    - Corrupted Data -> Restore Data from Backup
+
+### CI/CD (Continuous Integration / Continuous Delivery)
+- Repository -> Build System -> Deployment System -> Test/Production Environment
+- SecDevOps = Automate Security Checks in CI/CD
+
+next up: Getting Started with Google Cloud Development
+
+---
+
 ## Section 1: Designing highly scalable, available, and reliable cloud-native applications
 
 ### 1.1 Designing high-performing applications and APIs. Considerations include:
