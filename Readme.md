@@ -81,7 +81,7 @@ tags: gcp learning cloud
 - Bug Bounty Program
 
 ### Pricing and Billing
-- [Online Pricing Calculator](cloud.google.com/products/calculator)
+- [Online Pricing Calculator](https://cloud.google.com/products/calculator)
 - defining Budgets to Account or Project level
 - create Alerts for thresholds
 - view reports and billing dashboards
@@ -95,6 +95,8 @@ tags: gcp learning cloud
 - Allocation Quotas
     - set max number of resources for project
     - e.g. max 5 VPC's
+
+---
 
 ### GCP Hierarchy
 1. Organization node (root node | overall policies)
@@ -132,6 +134,8 @@ tags: gcp learning cloud
     - Cloud Shell (online shell via GUI)
 - API (programmatic interaction)
 - Cloud Mobile App (GUI for mobile devices)
+
+---
 
 ### VPC - Virtual Private Cloud
 > secure, individual, private cloud-computing model hosted in a public cloud
@@ -177,6 +181,8 @@ tags: gcp learning cloud
 - Edge Caching
 - low network latency
 - provide end user with content, quickly
+
+---
 
 ### Cloud Storage
 - Object Storage organized in Buckets
@@ -224,7 +230,157 @@ tags: gcp learning cloud
     - asynchronous batch or synchronous real-time porocessing
     - machine learning algorithms on data
 
-next up: introduction to containers
+---
+
+### Cloud App Engine
+- Only write code in self contained workloads
+- rapid scaling
+
+### Container
+- Box containing partition, code and dependencies
+- portable Code and OS/Hardware of Host is a black box
+- starts as quickly as a process
+- requires container runtime 
+
+### Kubernetes & Google Kubernetes Engine (GKE)
+- Manage and orchestrate containers in a cluster
+- Scaling, Deploying and Rollbacks
+- Kubernetes Cluster contains nodes which contain pods
+- Pod (smallest unit) = Running Process/App
+- `kubectl` cli
+- Service (load balanced pods) - stable Endpoint
+- Declaration by Configuration File (deployment.yml)
+- GKE = managed Kubernetes Cluster by Google
+
+
+### Hybrid- or Multi-Cloud (Anthos)
+- Parts of Infrastructure On-Premise and using Cloud Infrastructure
+- Anthos = Googles Hybrid- or Multi-Cloud Solution
+- Anthos uses Kubernetes and GKE On-Premise
+
+---
+
+### App Engine
+- Serverless
+- automatically provision servers and scale on demand
+- limited Languages and Framework Support
+- SDK for local development (local emulation)
+- Standard Runtime: Containers (Java, Python, PHP, Node.js or Ruby), no SSH access
+- Flexible Runtime: Custom Configuration (custom Docker Image) (managed Compute Engine VM), SSH access
+
+### Google API Tools
+- Cloud Endpoints
+    - Distributed API management system
+    - OpenAPI Specification
+    - Supports Apps in App Engine, GKE and GCE)
+- API Gateway
+    - Secure Access to backend services via REST API
+    - Clients consume REST APIs to implement standalone apps
+- Apigee Edge
+    - Focus on Business Functions (rate limiting, quotas, analytics)
+    - often B2B
+    - Backend Services don't need to be in GCP, often use to take apart legacy apps
+
+
+### Cloud Run
+- Serverless (for stateless containers handling web requests / pubsub events)
+- build on Knative
+- Autoscaling
+- only charges for use
+- Write Code -> Build Image -> Run Image from Artifact Registry (GCR)
+- auto HTTPS traffic, SSL Certificate, Url Endpoint
+
+---
+
+### Deployment in the Cloud
+- Cloud Source Repositories (Git in the Cloud)
+
+### Cloud Functions
+- lightweight, event based, asynchronous computing
+- small, single purpose function
+- support: Node.js, Python, Go, Java, .Net, Ruby, PHP
+
+### Terraform (IaC)
+- Describe Template File, Apply to the Environment
+
+---
+
+### Monitoring
+> "Collecting, Processing, Aggregating and displaying real-time quantitive data [...]"
+> e.g. Query counts, Error counts, Processing times, Server lifetimes
+> _Reference_: [Google's Site Reliability Engineering Book](https://landing.google.com/sre/books)
+
+- Foundation of Application Reliability
+- Build Dashboards
+- Alert on SLO violation
+- Metrics/ KPIs
+    - Latency (e.g. Page Load, Response Time, Waiting Requests etc.)
+    - Traffic (e.g. Requests, IO, Sessions, Transactions etc.)
+    - Saturation - how full the service is / capacity of service (e.g. Memory, CPU, Disk etc.)
+    - Errors (e.g. 400/500 HTTP Codes, Exceptions, Stack Traces etc.)
+
+### SLI, SLO, SLA
+
+#### SLI (Service Level Indicator)
+> Monitoring Metric, measuring one aspect of service's reliability
+
+- Number of good events / Count of all valid events
+
+#### SLO (Service Level Objective)
+> Combines SLI with target reliability
+
+- SMART SLO's
+- **S**pecific
+- **M**easurable
+- **A**chievable
+- **R**elevant (to the user)
+- **T**ime-bound
+
+#### SLA (Service Level Agreement)
+> Commitments made to your customers
+
+- minimum level of service
+- Alerting Threshhold higher than SLA
+
+### Observability
+- Signals: Metrics, Logs, Trace
+- Visualize and Analyze: Dashboards, Metrics/Logs Explorer, Service Monitoring, Health Checks, Profiler
+- Incidents: Alerts, Error Reporting, SLO
+
+#### Monitoring
+- Signal Data -> Aligned Data
+- Predifined or Custom Metrics
+- Visibility for Performance, Uptime, Overall Health
+- allow creation of Alerts
+
+#### Logging
+- Examine Logs via Google's Log Explorer 
+- near real-time Analyzing
+- Export as
+    - Files to GCS (Google Cloud Storage)
+    - Messages to PubSub
+    - Data into BigQuery
+- Log Categories
+    - Audit (Admin Activity, Data Access, System Events, Access)
+    - Agent (Fluentd agent - logs from GCE, Containers etc.)
+    - Network (VPC flow, Firewall rules, NAT gateway)
+    - Service (StdOut/StdErr)
+
+#### Error Reporting
+- Crashes/Exceptions from Services
+- Dedicated view for Errors and Stacktraces
+
+#### Cloud Trace
+- Latency from distributed Applications
+- Capture Traces from the Application
+- Performance insights
+- Identify Changes in Performance
+
+#### Cloud Profiler
+- CPU and Heap Picture of an application
+- Analyze Apps across GCP, On-Premise and other clouds
+- Support for Java, Go, Python, Node.js
+- Call hierarchy and resource consumption in interactive flame graph
 
 ---
 
