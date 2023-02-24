@@ -516,10 +516,129 @@
 ---
 ## Section 2: Securing and Integrating Components of your Application
 
+### Identity and Access Management (IAM)
+- Handling of Authentication and Authorization
+- Members can be of type
+	- Google Account
+	- Service Account (technical user identifier via email)
+	- Google Group
+	- Google Workspace Domain
+	- Cloud Identity Domain
+- Grant Access (allow actions) to Resource
+- Permission naming: `<service>.<resource>.<verb>`
+- Roles are a set of permissions
+	- Basic
+	- predefined
+	- custom
+- Client Libraries look for credentials in the environment
+- Application Default Credentials (ADC) used to authenticate between applications
+- Credentials lookup in the following order:
+	- env variable: GOOGLE_APPLICATION_CREDENTIALS
+	- check default service account
+	- error
 
+#### OAuth 2.0 Access
+- app requests access to resources
+- user will be prompted for consent
+- if consent provided, app can request credentials from auth server
+- app can use credentials to access resources on behalf of the user
 
+#### Identity-Aware Proxy (IAP)
+- controls access and verifies user identity
+- Applications and Resources can only be accessed via IAP with correct user and IAM role
 
+```mermaid
+flowchart TD
+1((User)) --> 2((IAP))
+2 --> 3(Google_Authentication)
+3 --> 4(IAM_Authorization)
+4 --> 5(Access)
+```
 
+#### Identity Authentication
+- using Identity Plaform API
+- add Provider from available Provider (SDK) list
+- add authorized domain
+- configure users
+- configure application via apiKey and authDomain
+- authenticate via Client Library
+
+---
+
+### PubSub
+- managed messaging architecture for asynchronous communication
+- REST / gRPC / Apache Kafka Connector
+- ideal for: real-time messaging (e.g. click stream data, sensor data etc.)
+- Publisher: creates messages
+- Subscriber: receives messages
+	- Push OR Pull Method
+		- Pull
+			- Subscriber controls rate of deliveries
+			- allows parallel consumation of messages (higher throuput)
+		- Push
+			- Subscriber does not need to implement PubSub Client Library (consumes via HTTP Endpoint)
+	- confirms read message with ACK (message will be deleted fom subscriptions-queue)
+- Use Cases
+	- topic as a buffer (store messages until downstream subscriber can consume increased amount)
+	- multiple subscribers on one topic
+
+---
+
+### Machine Learning Intelligence
+- GCP offers pre-trained ML models
+- available via REST calls
+- no ML knowledge required
+
+---
+
+###  Cloud Functions
+> overall description see above
+- default timeout 60sec
+- Use Cases:
+	- Webhooks (HTTP, Functions)
+	- Lightweight ETL (Storage, Functions, Firestore)
+	- IoT (PubSub, Functions)
+- Invocation
+	- Asynchronous (Background Function)
+	- Synchronous (HTTP Function)
+
+---
+
+### Managing API's
+
+#### Cloud Endpoints
+- Implement API Gateways using Cloud Endpoints
+- API Management (Cloud Endpoint)
+	- Interface definition (OpenAPI, gRPC API)
+	- Authentication and Authorization (Service- and User Authentication)
+	- Logging and monitoring (Cloud Logging, Cloud Trace)
+	- Management and Scalability (Service Management / -Control / - Proxy)
+- Cloud Endpoints supports REST and gRPC API's
+- User Authentication
+	- via Firebase, Auth0, Google Authentication or custom Auth
+	- after user signed in, auth provider sends signed JWT to Cloud Endpoints
+- Server to Server Authentication
+	- Google ID Token for signing the Request
+- Monitoring of API in Cloud Endpoints Dashboard
+- Developer Portal (Cloud Endpoints Portal)
+
+#### API Gateway
+- fully managed
+- uses gRPC
+- inexpensive
+- scalable and flexible deployment
+- less control than Cloud Endpoints
+- Service Proxy required for services outside GCP
+
+#### Apigee API Platform
+- API Management Platform for designing, securing and scaling API's
+- Proxt API anywhere (not just GCP)
+- Legacy apps can be hidden behind API facade
+- more expensive
+- not appropriate for simple API use cases
+
+---
+## Section 3: App Deployment, Debugging, and Performance
 
 
 ---
