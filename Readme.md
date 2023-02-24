@@ -1,9 +1,3 @@
----
-title: GCP Professional Cloud Developer
-tags: gcp learning cloud
----
-
-# GCP Professional Cloud Developer
 > Learning Path
 
 ---
@@ -183,6 +177,7 @@ tags: gcp learning cloud
 - provide end user with content, quickly
 
 ---
+## Section 1: Getting Started With Application Development
 
 ### Cloud Storage
 - Object Storage organized in Buckets
@@ -217,7 +212,7 @@ tags: gcp learning cloud
 - NoSQL DB
 - Documents organized into collections
 - horizontally scalable
-- mobile, web and server development
+- Usage: mobile and web apps, web and server development
 
 ### Cloud BigTable
 - NoSQL big data database
@@ -397,7 +392,135 @@ tags: gcp learning cloud
 - Repository -> Build System -> Deployment System -> Test/Production Environment
 - SecDevOps = Automate Security Checks in CI/CD
 
-next up: Getting Started with Google Cloud Development
+---
+
+### Interacting with Google APIs
+- Command Line Tools (gcloud CLI - like gcloud, gsutil, bq)
+- Client Libraries (e.g. python, node, hava, go etc.)
+- Cloud Shell - console in the webGUI (tmp VM with gcloud SDK)
+- Cloud Code Plugin for IDE 
+
+---
+
+### Storage Options
+
+#### Cloud Storage
+- Object Storage (BLOB)
+- HTTP access
+- **ideal for** large or rarely accessed data (images and videos)
+- Structure: Projects -> Buckets -> Objects
+- Bucket names are global (unique) and publicly visible
+- Storage Classes
+	- Standard
+		- no minimum
+		- frequently accessed data
+		- low data access costs / high storage cost
+	- Nearline
+		- minimum: 30 days
+		- e.g. moderate accessed data backup
+	- Coldline
+		- minimum: 90 days
+		- e.g. infrequently accessed data
+	- Archive
+		- minimum: 365 days
+		- e.g. disaster recovery
+		- high data access costs / low storage costs
+- strongly consistent Storage operations
+	- read-after-write
+	- read-after-delete
+	- bucket/object listing
+	- granting access
+- eventually consistent Storage operations
+	- revoking access
+	- publicly readable caches objects
+- Access
+	- Cloud Identity (IAM) - Bucket level access
+	- Access Control Lists (ACL) - fined-grained Object level access controls
+	- Signed Urls - time limited r/w access
+	- Signed Policy Documents - specify what can be uploaded to a bucket
+	- Firebase Security Roles - access control for mobile and web apps using Firebase SDK
+- Best Practises
+	- large objects can be uploaded in chunks (parallel) and combined to a composite object
+	- on 429 and 5xx responses, clients should use truncated exponential backoffs for periodically retry
+	- CORS permissions can be set on bucket
+	- Storage location should be local to consumers
+	- use TLS for Transport and use HTTPS library with server certificate validation
+	- manage access via groups, not individually
+	- Validate Data transferred from/to bucket via CRC32c or MD5 checksum
+
+#### Firestore (/ Datastore)
+- managed, serverless
+- NoSQL, document oriented (key-value)
+- scalable
+
+| Features\Mode | Native Mode | Datastore Mode |
+| -------- | -------- | -------- |
+| mobile and web client libraries | :heavy_check_mark: | :x: |
+| real-time and offline features | :heavy_check_mark: | :x: |
+| **ideal for** | mobile, web, IoT, real-time applications (no heavy writes) | Server Apps (heavy read/write) |
+
+#### Cloud Bigtable
+- High Performance NoSQL
+- scale billions of rows
+- store TB to PB of data
+- fast lookup and write speed
+- **ideal for** Operational and Analytical Applications ("flat" heavy read/write)
+
+#### Cloud SQL
+- relational database service
+- MySQL, PostgreSQL, SQL Server
+- **ideal for** structured data
+
+#### Cloud Spanner
+- mission-critical relational database
+- transactional consistency
+- global scale, high availability (99,999% SLA)
+- multi-region replication
+- supports interleaf tables (child rows are inserted into the adjacent parent row for faster parent-child join queries)
+- **ideal for** high transactions with scale and consistency requirements
+
+#### BigQuery
+- Enterprise Data Warehouse for analytics
+- managed, serverless
+- fast response times
+- **ideal for** big data processing / reporting (BI)
+
+#### Caching
+- Memorystore (Redis or Memcached)
+- ideal for
+    - high performance, scalable web applications
+    - gaming
+    - stream processing
+
+### Cloud Datastore
+- Firestore in Datastore mode
+- Native Firestore Features cannot be used with datastore mode
+- Usage: Server Applications
+- Objects are called "**Entities**"
+- Group of Entities are called **Kind**"
+- Entities have a unique **key**: unique identifier of (Namespace, Kind, Id, optional:Ancestor Path)
+- Values / Fields of Entities are called **Properties**
+- Indexes
+	- Build in index (for each property)
+	- Composite index (combined property index for more complex queries - cause more latency as of consistency)
+- For complex queries on large (non indexed) datasets, use BigQuery
+- Do not index Properties with monotonically increasing values (such as timestamp)
+- Queries are more restrictive that relational databases (like joins)
+- Naming based on UTF-8 Characters
+- Usage:
+	- batch r/w/d operations
+	- rollback failed transactions
+	- use asynchronous calls
+	- use allocateId() method to create Id and avoid hotspots by monotonically increasing numbers
+
+---
+## Section 2: Securing and Integrating Components of your Application
+
+
+
+
+
+
 
 ---
 
