@@ -1054,7 +1054,42 @@ e.g.:
 - collects data and generates report to evaluate how much of a 'good fit' a workload is for modernization (Cloud)
 - excellent fit / good fit / fit with work before migrating / no fit
 
-### Modern CI/CD for Anthos
+### Cloud Run
+- consists of:
+  - **Service**
+    - custom ressource definition
+    - knative service
+  - **Route**
+    - maps service URL to specific revision
+    - makes traffic splitting possible
+  - **Configuration**
+    - desired state
+  - **Revisions**
+    - Point In Time snapshot of a service
+    - stores own autoscaling configuration
+- local emulator
+  - available in gcloud, intellij etc.
+  - `gcloud beta code dev`
+
+### Serving web traffic with custom domains
+3 options:
+- global: use global external HTTP(s) load balancer (e.g. to use Cloud CDN or Cloud Armor)
+- internal: use firebase hosting (plan to stay in google cloud)
+- custom: use custom domain mapping (straightforward but limited availability)
+
+### knative Eventing (Event Processing)
+- broker: ensures every event find it's way to the consumer
+- trigger: used by the broker to decide which consumer gets this event
+- uses CloudEvent format
+
+### EventArc
+- managed service for knative eventing
+- build event driven architectures using EventArc as SaaS solution
+
+---
+
+## Section 7: Serverless Cloud Run Development
+
 
 ---
 
