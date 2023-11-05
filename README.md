@@ -711,7 +711,7 @@ spec:
       - no scale down to zero
   - Cloud Run is the best of both environments
 
-#### [Cloud Run](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+#### Cloud Run
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/cloud-run-story-serverless-containers)
 - Serverless (Infrastructure management is abstracted away: Provisioning, Configuring, Managing) 
 - regional service
