@@ -1,4 +1,4 @@
-name: Build GH Page
+name: Build GH Pages
 on:
   push:
     branches:
@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-gh-pages:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Converts Markdown to HTML
-        uses: jaywcjlove/markdown-to-html-cli@v4
+        uses: jaywcjlove/markdown-to-html-cli@main
         with:
           github-corners: https://github.com/LeonStoldt/GCP_Professional_Cloud_Developer
