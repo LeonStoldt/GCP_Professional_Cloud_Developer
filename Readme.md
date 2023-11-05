@@ -87,7 +87,7 @@
     - e.g. 1000 requests/s (reset each second)
 - Allocation Quotas
     - set max number of resources for project
-    - e.g. max 5 VPC's
+    - e.g. max 5 VPCs
 
 ### GCP Hierarchy
 1. Organization node (root node | overall policies)
@@ -162,7 +162,7 @@ flowchart TD
 ```
 
 #### Identity Authentication
-- using Identity Plaform API
+- using Identity Platform API
 - add Provider from available Provider (SDK) list
 - add authorized domain
 - configure users
@@ -190,7 +190,7 @@ flowchart TD
 <details>
     <summary>expand</summary>
 
-> course: Cloud Fundamentals + Getting Started With Application Development
+> course: Cloud Fundamentals + Getting Started With Application Development + Application Development with Cloud Run
 
 ### Cloud Source Repositories
 - Git in the Cloud
@@ -212,10 +212,10 @@ flowchart TD
 - using firewall rules to restrict access
 - combines scalability of public cloud and data isolation of private cloud
 - create static routes to forward traffic to specific destinations
-- VPC's are global and can have subnets (regional) worldwide
+- VPCs are global and can have subnets (regional) worldwide
 - Routing Tables (forward traffic from/to instances)
 - Firewall (restrict access, rules by using tags e.g. `web` = 80,443 IN allow)
-- VPC Peering allows connection between VPC's to exchange traffic
+- VPC Peering allows connection between VPCs to exchange traffic
 - Shared VPC tied to IAM policy
 - offers Load balancing
 
@@ -406,7 +406,7 @@ flowchart TD
 	- Firebase Security Roles - access control for mobile and web apps using Firebase SDK
 - Best Practises
 	- large objects can be uploaded in chunks (parallel) and combined to a composite object
-	- on 429 and 5xx responses, clients should use truncated exponential backoffs for periodically retry
+	- on 429 and 5xx responses, clients should use truncated exponential backoff for periodically retry
 	- CORS permissions can be set on bucket
 	- Storage location should be local to consumers
 	- use TLS for Transport and use HTTPS library with server certificate validation
@@ -414,7 +414,9 @@ flowchart TD
 	- Validate Data transferred from/to bucket via CRC32c or MD5 checksum
 - offer multi-regional access
 - can be accessed from multiregional backend services
-- **ideal for** large or rarely accessed data (images and videos) or static website content
+- **ideal for**: large or rarely accessed data (images and videos) or static website content
+
+---
 
 ### Database Overview
 - [which database should I use?](https://cloud.google.com/blog/topics/developers-practitioners/your-google-cloud-database-options-explained)
@@ -424,7 +426,7 @@ flowchart TD
 - fully managed relational Databases (e.g. MySQL, Postgres etc.)
 - auto patch / backups
 - MySQL, PostgreSQL, SQL Server
-- **ideal for** structured data
+- **ideal for**: structured data
 
 ##### Cloud SQL with Cloud Run
 - Cloud SQL Auth Proxy Client is managed by Cloud Run
@@ -453,7 +455,7 @@ flowchart TD
 - multi-region replication / offer multi-regional access
 - can be accessed from multiregional backend services
 - supports interleaf tables (child rows are inserted into the adjacent parent row for faster parent-child join queries)
-- **ideal for** high transactions with scale and consistency requirements
+- **ideal for**: high transactions with scale and consistency requirements
 
 #### Cloud Firestore (/ Datastore)
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/all-you-need-know-about-firestore-cheatsheet)
@@ -470,7 +472,7 @@ flowchart TD
 - Native Firestore Features cannot be used with datastore mode
 - Usage: Server Applications
 - Objects are called "**Entities**"
-- Group of Entities are called **Kind**"
+- Group of Entities are called "**Kind**"
 - Entities have a unique **key**: unique identifier of (Namespace, Kind, Id, optional:Ancestor Path)
 - Values / Fields of Entities are called **Properties**
 - Indexes
@@ -484,13 +486,13 @@ flowchart TD
 	- batch r/w/d operations
 	- rollback failed transactions
 	- use asynchronous calls
-	- use allocateId() method to create Id and avoid hotspots by monotonically increasing numbers
+	- use allocateId() method to create ID and avoid hotspots by monotonically increasing numbers
 
-| Features\Mode | Native Mode | Datastore Mode |
-| -------- | -------- | -------- |
-| mobile and web client libraries | :heavy_check_mark: | :x: |
-| real-time and offline features | :heavy_check_mark: | :x: |
-| **ideal for** | mobile, web, IoT, real-time applications (no heavy writes) | Server Apps (heavy read/write) |
+| Features\Mode                   | Native Mode                                                | Datastore Mode                 |
+|---------------------------------|------------------------------------------------------------|--------------------------------|
+| mobile and web client libraries | :heavy_check_mark:                                         | :x:                            |
+| real-time and offline features  | :heavy_check_mark:                                         | :x:                            |
+| **ideal for**:                  | mobile, web, IoT, real-time applications (no heavy writes) | Server Apps (heavy read/write) |
 
 #### Memorystore (Redis or Memcached)
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-memorystore)
@@ -498,7 +500,7 @@ flowchart TD
 - fully managed (like Redis or Memcached)
 - requires VPC connector
 - VPC connector scale up to access Memorystore
-- **ideal for**
+- **ideal for**:
 	- high performance, scalable web applications
 	- gaming
 	- stream processing
@@ -508,7 +510,7 @@ flowchart TD
 - Enterprise Data Warehouse for analytics
 - managed, serverless
 - fast response times
-- **ideal for** big data processing / reporting (BI)
+- **ideal for**: big data processing / reporting (BI)
 
 #### Cloud BigTable
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/how-big-cloud-bigtable)
@@ -517,49 +519,134 @@ flowchart TD
 - scale billions of rows
 - store TB to PB of data
 - fast lookup and write speed
-- **ideal for** Operational and Analytical Applications ("flat" heavy read/write)
+- **ideal for**: Operational and Analytical Applications ("flat" heavy read/write)
 - Use Cases
 	- 1TB+ of (semi-)structured data
 	- high throughput or rapidly changing data
 	- NoSQL data
 	- time series or semantic ordering data
-	- asynchronous batch or synchronous real-time porocessing
+	- asynchronous batch or synchronous real-time processing
 	- machine learning algorithms on data
 
-### [Compute Engine - VM's](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+---
+
+### Compute Options
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+
+### Reminder: Containerization and Kubernetes (not GCP specific)
+<details>
+    <summary>expand</summary>
+
+#### Containerization
+- Container is a box containing partition, code and dependencies
+- portable Code and OS/Hardware of Host is a black box
+- starts as quickly as a process
+- requires container runtime
+
+#### Kubernetes
+- Manage and orchestrate containers in a cluster with open source Kubernetes
+- support of stateless and stateful apps
+- consists of: **Control Plane**, **Nodes**, **Pods**
+	- Kubernetes Cluster contains nodes which contain pods
+	- Pod (smallest unit) = Running Process/App
+	- Service (load balanced pods) - stable Endpoint
+- Automation of: deployment, scaling, load balancing, logging, monitoring
+- Efficiency: Containers are placed based on Compute Nodes their Hardware Requirements
+- Declarative: Explain what the goal state looks like
+	- Declaration by Configuration File (deployment.yml)
+	- achieve and maintain desired state with watch loop
+- Self-Healing: Automatically replaces unhealthy or failed containers
+- `kubectl` cli: `kubectl` `[command]` `[type]` `[name]` `[flags]`
+  - e.g. kubectl get pods
+  - e.g. kubectl get pod myApp -n flux
+
+##### Kubernetes Object Model
+- each kubernetes managed item is an object
+- contains attributes and state
+- can be viewed or edited
+- Object spec - desired state
+- Object status - current state (provided by Control Plane)
+- representation of a 'type' or **kind**
+
+##### Control Plane
+- consists of:
+	- **kube-ApiServer:**
+		- accepts commands for view/change of cluster
+	- **kubectl:**
+		- connect to kube-ApiServer
+		- communicating using the Kubernetes API
+		- authenticating
+		- managed admission control
+	- **etcd:**
+		- clusters database
+		- store state of the cluster
+		- cluster configuration / nodes / pods
+	- **kube scheduler:**
+		- schedule pods onto the nodes
+	- **kube controller manager:**
+		- continuously monitors cluster for desired state
+		- attempt to make changed achieving the desired state
+	- **kube cloud manager:**
+		- manages controllers that interact with underlying cloud providers
+
+##### Nodes
+- each contains a
+	- **kublet:** (kubernetes agent)
+		- kube-ApiServer connects to kubelet (e.g. start pod)
+		- kublet reports back
+	- kube-proxy
+		- maintain network connectivity among pods
+
+##### Manifest declaration
+Pod definition explained:
+```yaml
+apiVersion: v1 #kubernetes api version  
+kind: Pod #object
+metadata: # identifier object name, unique id and optional namespace
+  name: nginx #unique string per namespace
+  	#uid: 4dd... #generated by kubernetes 
+  labels: #key value pairs that tag objects
+    app: nginx
+	env: dev
+```
+
+Example Deployment Configuration for 3 nginx pods
+```yaml
+apiVersion: apps/v1  
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3 #scale
+  selector:
+    matchLabels:
+      app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+```
+
+</details>
+
+---
+
+#### [Compute Engine - VM's](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-compute-engine-use-cases-security-pricing-and-more)
 - most flexibility
 - most operational effort
 - billed by second
 - automatically applies sustained-use discount
 - committed-use discounts
-- Preemtible/Spot VM'ss
-	- Preemtible VM's up to 24h (e.g. for large compute and batch jobs)
+- Preemptive/Spot VM'ss
+	- Preemptive VM's up to 24h (e.g. for large compute and batch jobs)
 	- Spot VM's no max runtime
 - bring your own OS or use predefined (community) images
-- `ideal for:` lift-and-shift migrations
+- **ideal for**: lift-and-shift migrations
 
-> ### Reminder: (not GCP specific)
-> ### Containerization
-> - Container is a box containing partition, code and dependencies
-> - portable Code and OS/Hardware of Host is a black box
-> - starts as quickly as a process
-> - requires container runtime
-> 
-> ### Kubernetes
-> - Manage and orchestrate containers in a cluster with open source Kubernetes
-> - consists of: Control Plane, Nodes, Pods
->   - Kubernetes Cluster contains nodes which contain pods
->   - Pod (smallest unit) = Running Process/App
->   - Service (load balanced pods) - stable Endpoint
-> - Automation of: deployment, scaling, load balancing, logging, monitoring
-> - Efficiency: Containers are placed based on Compute Nodes their Hardware Requirements
-> - Declarative: Explain what the goal state looks like
->   - Declaration by Configuration File (deployment.yml)
-> - Self-Healing: Automatically replaces unhealthy or failed containers
-- `kubectl` cli
-
-### [Google Kubernetes Engine (GKE)](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+#### [Google Kubernetes Engine (GKE)](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/container-story-google-kubernetes-engine)
 - managed Kubernetes Cluster by Google
   - reduces operational effort in comparison to non-managed Kubernetes Cluster
@@ -576,13 +663,30 @@ flowchart TD
 - Hybrid or Multi-Cloud applications possible (e.g. partial On-Premise services)
 - allows using non-HTTP protocols
 
-### Hybrid- or Multi-Cloud (Anthos)
+#### Hybrid- or Multi-Cloud (Anthos)
+> course: Hybrid Cloud Modernizing Applications with Anthos
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-are-my-hybrid-and-multicloud-deployment-options-anthos)
 - Parts of Infrastructure On-Premise and using Cloud Infrastructure
 - Anthos = Googles Hybrid- or Multi-Cloud Solution
 - Anthos uses Kubernetes and GKE On-Premise
 
-### Cloud App Engine
+##### Migrate for Anthos and GKE / Migrate to containers
+- [Migration Overview](https://cloud.google.com/blog/topics/developers-practitioners/how-does-anthos-simplify-hybrid-multicloud-deployments)
+- extract, migrate and modernize applications to deploy to Cloud Run, GKE or Anthos
+- automated tool
+- extracts application elements of the VM
+
+##### StratoZone
+- collects data related to machines, performance, capacity, network and utilization
+- qualify workloads
+- suggest cloud resources to lift-and-shift
+
+##### Fit Assessment Tool
+- verifies fitness for containerization
+- collects data and generates report to evaluate how much of a 'good fit' a workload is for modernization (Cloud)
+- excellent fit / good fit / fit with work before migrating / no fit
+
+#### Cloud App Engine
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/ultimate-app-engine-cheat-sheet)
 - Only write code in self-contained workloads
 - fully managed serverless compute engine
@@ -605,13 +709,25 @@ flowchart TD
       - no scale down to zero
   - Cloud Run is the best of both environments
 
-### [Cloud Run](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+#### [Cloud Run](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/cloud-run-story-serverless-containers)
 - Serverless (Infrastructure management is abstracted away: Provisioning, Configuring, Managing) 
 - regional service
 - automatically provides HTTPS traffic, SSL Certificate, Url Endpoint
 - no language/framework/tool restriction
 - build on [Knative](https://knative.dev/)
+- consists of:
+  - **Service**
+    - custom ressource definition
+    - knative service
+  - **Route**
+    - maps service URL to specific revision
+    - makes traffic splitting possible
+  - **Configuration**
+    - desired state
+  - **Revisions**
+    - Point In Time snapshot of a service
+    - stores own autoscaling configuration
 - Autoscaling (scales horizontally depending on traffic)
   - every service has an internal load balancer which provides scaling up and down services based on requests
   - max container instances count per service is limited to 1000
@@ -640,14 +756,47 @@ flowchart TD
 - IAM best practise:
 	- default cloud run service account is Editor (Basic role)
 	- create service account per cloud run service with the least necessary privilege (reduce exploitation risk)
-- `ideal for:` stateless web and event based Applications (Storage, Pubsub, Http)
+- local emulator
+	- available in gcloud, intellij etc.
+	- `gcloud beta code dev`
+- **ideal for**: stateless web and event based Applications (Storage, Pubsub, Http)
 
-#### Buildpacks
+##### Ingress Proxy (Cloud Run)
+- [Overview](https://cloud.google.com/run/docs/securing/ingress)
+- handles traffic from internal environment
+- 3 modes:
+	- `INTERNAL`: only allows requests from VPC (does not allow requests from e.g. pubsub as those do not run in the VPC)
+	- `INTERNAL AND LOAD BALANCING`: additionally to internal, it allows requests from GLB
+	- `ALLOW ALL` (default): no restrictions
+
+##### VPC Egress
+- [Direct VPC egress](https://cloud.google.com/run/docs/configuring/vpc-direct-vpc) (preview as of Nov 23)
+  - no VPC Access Connector necessary
+  - supports max 100 instances
+  - some features are not available with direct VPC
+- [Serverless VPC Access](https://cloud.google.com/run/docs/configuring/vpc-connectors)
+  - Cloud Run are not part of the VPC -> VPC connector is necessary
+  - VPC access connector forwards requests between Cloud Run and the VPC
+  - Control outbound traffic: Configure VPC egress settings
+    - route all traffic through VPC connector (even if destination is external)
+    - a) restrict outgoing requests via VPC networks firewall rules
+    - b) use static outbound IP address instead one from the public pool (e.g. use case use static IP address for firewall allow rules)
+
+##### IAM (Cloud Run)
+- 2 use cases:
+	- allow specific service accounts only
+	- allow unauthenticated (public)
+- specific Cloud Run: Cloud Run Invoker
+- authenticated request:
+	- Request with OIDC (Open ID Connect) token (=JWT token)
+	- signed by google
+
+##### Buildpacks
 - Open Source Project
 - convert source code into container image without a Dockerfile
 - `pack` is a command line tool
 
-### [Cloud Functions](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+#### [Cloud Functions](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
 - [Overview](https://cloud.google.com/blog/topics/developers-practitioners/learn-cloud-functions-snap)
 - lightweight, event based, asynchronous computing
 - restricted to certain languages
@@ -664,7 +813,11 @@ flowchart TD
 	- Asynchronous (Background Function)
 	- Synchronous (HTTP Function)
 
-### Pub/Sub
+---
+
+### Messaging / Event Communication
+
+#### Pub/Sub
 - [Overview](https://github.com/priyankavergadia/GCPSketchnote/raw/main/images/pubsub.jpg)
 - managed messaging architecture for asynchronous (Service to Service) communication
 - REST / gRPC / Apache Kafka Connector
@@ -682,7 +835,7 @@ flowchart TD
     - Messages will be discarded if delivery fails before maximum retention time
     - Dead-Letter can be configured to store undelivered messages in a dead-letter topic
   - Subscriber controls rate of deliveries
-  - allows parallel consumation of messages (higher throuput)
+  - allows parallel consumption of messages (higher throughput)
 	- Push
   - Subscriber does not need to implement PubSub Client Library (consumes via HTTP POST Endpoint)
   - confirms read message with ACK (message will be deleted fom subscriptions-queue)
@@ -692,16 +845,41 @@ flowchart TD
 - message-ordering can be enabled (increases latency)
 - messages can be delivered more than once
 	- prevention e.g. via message-ID recording
-- `ideal for`: real-time messaging (e.g. click stream data, sensor data etc.)
+- **ideal for**: real-time messaging (e.g. click stream data, sensor data etc.)
 
 
-### Cloud Tasks
+#### Cloud Tasks
 - Service to Service communication
 - choose Cloud Tasks over Pub/Sub if one of the followings aspects are mandatory:
 	- explicit rate controls (useful for external endpoint with certain request rate threshold)
 	- longer timouts to respond to a message (> 10 min)
 - message-ordering is not available
 - no dead-letter functionality
+
+#### EventArc
+- managed service for **knative Eventing** (Event Processing)
+  - broker: ensures every event find it's way to the consumer
+  - trigger: used by the broker to decide which consumer gets this event
+  - uses CloudEvent format
+- build event driven architectures using EventArc as SaaS solution
+
+---
+
+### Cloud Workflows
+- define workflows in configuration (yaml / json) file
+- types
+	- assign: sets variables (in memory)
+	- call: performs web request and stores response (in memory) - authenticated by IAM
+	- switch: decides based on what's in memory and branches to different flows
+	- return: returns the in memory result and ends the workflow successfully
+	- raise: ends the execution with an error
+- can be triggered on a schedule by Cloud Scheduler
+- automatically parses json
+- predefined connectors are a convenient way of accessing cloud services
+	- authentication
+	- retry build-in
+	- etc.
+- retry policies can be configured
 
 ### Machine Learning Intelligence
 > course: Securing and Integrating Components of your Application
@@ -734,7 +912,7 @@ flowchart TD
 
 ### CI/CD Pipeline Products
 - Google Cloud Build
-- Github Actions
+- GitHub Actions
 - Gitlab CI
 - Jenkins
 - Circle CI
@@ -748,7 +926,7 @@ flowchart TD
 <details>
     <summary>expand</summary>
 
-> course: App Deployment, Debugging, and Performance
+> course: App Deployment, Debugging, and Performance + Application Development with Cloud Run
 
 ### CD - Continuous Delivery
 - `Code` -> `Build` -> `Deploy (stage)` -> `Test` -> `Release (production)` -> `Monitor`
@@ -779,6 +957,18 @@ flowchart TD
 - Cloud Functions
 - App Engine
 
+### Serving web traffic with custom domains
+3 options:
+- global: use global external HTTP(s) load balancer (e.g. to use Cloud CDN or Cloud Armor)
+- internal: use firebase hosting (plan to stay in google cloud)
+- custom: use custom domain mapping (straightforward but limited availability)
+
+### Controlling Inbound traffic
+- filter ingress traffic via
+	- Google Cloud Armor
+	- Ingress proxy
+	- IAM
+
 </details>
 
 ---
@@ -787,7 +977,7 @@ flowchart TD
 <details>
     <summary>expand</summary>
 
-> course: Getting Started With Application Development
+> course: Getting Started With Application Development + Application Development with Cloud Run
 
 ### Observability
 - [Overview](https://raw.githubusercontent.com/priyankavergadia/GCPSketchnote/main/images/CloudOps.jpg)
@@ -822,7 +1012,7 @@ flowchart TD
 #### SLO (Service Level Objective)
 > Combines SLI with target reliability
 
-- SMART SLO's
+- SMART SLOs
 - **S**pecific
 - **M**easurable
 - **A**chievable
@@ -873,209 +1063,16 @@ flowchart TD
 - Usage: Install Profiling Agent on the VM where the app runs
 - statistical profiler - agent is not always accurate
 
-</details>
-
----
-
-
-
-
-
-
-> Application Development
-
 ### Disaster Recovery
 - develop and test disaster recovery scenarios regularly
 - create recovery plans
 - e.g. Scenarios
-    - Zonal or Regional Failure
-    - Deployment Rollback
-    - Connectivity Failure
-    - Corrupted Data -> Restore Data from Backup
+	- Zonal or Regional Failure
+	- Deployment Rollback
+	- Connectivity Failure
+	- Corrupted Data -> Restore Data from Backup
 
----
-
-## Section 4: Application Development with Cloud Run
-
-### Controlling Inbound / Outbound traffic
-- filter ingress traffic via
-	- Google Cloud Armor
-	- Ingress proxy
-	- IAM
-
-### Ingress Proxy
-- handles traffic from internal environment
-- 3 modes:
-	- INTERNAL: only allows requests from VPC (does not allow requests from e.g. pubsub as those do not run in the VPC)
-	- INTERNAL AND LOAD BALANCING: additionally to internal, it allows requests from GLB
-	- ALLOW ALL (default): no restrictions
-
-### IAM (Cloud Run)
-- 2 use cases:
-	- allow specific service accounts only
-	- allow unauthenticated (public)
-- specific Cloud Run: Cloud Run Invoker
-- authenticated request:
-	- Request with OIDC (Open ID Connect) token (=JWT token)
-	- signed by google
-
-### Serverless VPC Access
-- Cloud Run are not part of the VPC -> VPC connector is necessary
-- VPC access connector forwards requests between Cloud Run and the VPC
-- Control outbound traffic: Configure VPC egress settings
-	- route all traffic through VPC connector (even if destination is external)
-	- a) restrict outgoing requests via VPC networks firewall rules
-	- b) use static outbound IP address instead one from the public pool (e.g. use case use static IP address for firewall allow rules)
-
-### Cloud Workflows
-- define worklows in configuration (yaml / json) file
-- types
-	- assign: sets variables (in memory)
-	- call: performs web request and stores response (in memory) - authenticated by IAM
-	- switch: decides based on what's in memory and braches to different flows
-	- return: returns the in memory result and ends the workflow successfully
-	- raise: ends the execution with an error
-- can be triggered on a schedule by Cloud Scheduler
-- automatically parses json
-- predefined connectors are convenient way of accessing cloud services
-	- authentication
-	- retry build-in
-	- etc.
-- retry policies can be configured
-
----
-## Section 5: Getting Started with Google Kubernetes Engine
-
-### Kubernetes
-- declarative configuration (achieve and maintain desired state with watch loop)
-- support of stateless and stateful apps
-
-#### Kubernetes Object Model
-- each kubernetes managed item is an object
-- contains attributes and state
-- can be viewed or edited
-- Object spec - desired state
-- Object status - current state (provided by Control Plane)
-- representation of a 'type' or **kind**
-
-#### Control Plane
-- consists of:
-  - **kube-ApiServer:**
-    - accepts commands for view/change of cluster
-  - **kubectl:**
-    - connect to kube-ApiServer
-    - communicating using the Kubernetes API
-    - authenticating
-    - managed admission control
-  - **etcd:**
-    - clusters datbase
-    - store state of the cluster
-    - cluster configuration / nodes / pods
-  - **kube scheduler:**
-    - schedule pods onto the nodes
-  - **kube controller manager:**
-    - continuously monitors cluster for desired state
-    - attempt to make changed achieving the desired state
-  - **kube cloud manager:**
-    - manages controllers that interact with underlying cloud providers
-
-#### Nodes
-- each contains a
-  - **kublet:** (kubernetes agent)
-    - kube-ApiServer connects to kubelet (e.g. start pod)
-    - kublet reports back
-  - kube-proxy
-    - maintain network connectivity among pods
-
-#### Manifest decleration
-Pod definition explained:
-```yaml
-apiVersion: v1 #kubernetes api version  
-kind: Pod #object
-metadata: # identifier object name, unique id and optional namespace
-  name: nginx #unique string per namespace
-  	#uid: 4dd... #generated by kubernetes 
-  labels: #key value pairs that tag objects
-    app: nginx
-	env: dev
-```
-
-Example Deployment Configuration for 3 nginx pods
-```yaml
-apiVersion: apps/v1  
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 3 #scale
-  selector:
-    matchLabels:
-      app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:latest
-```
-
-#### kubectl
-`kubectl` `[command]` `[type]` `[name]` `[flags]`
-
-e.g.:
-- kubectl get pods
-- kubectl get pod myApp -n flux
-
----
-
-## Section 6: Hybrid Cloud Modernizing Appplications with Anthos
-
-### Migrate for Anthos and GKE / Migrate to containers
-- extract, migrate and modernize applications to deploy to Cloud Run, GKE or Anthos
-- automated tool
-- extracts application elements of the VM
-
-### StratoZone
-- collects data related to machines, performance, capacity, network and utilization
-- qualify workloads
-- suggest cloud ressources to lift-and-shift
-
-### Fit Assessment Tool
-- verifies fitness for containerization
-- collects data and generates report to evaluate how much of a 'good fit' a workload is for modernization (Cloud)
-- excellent fit / good fit / fit with work before migrating / no fit
-
-### Cloud Run
-- consists of:
-  - **Service**
-    - custom ressource definition
-    - knative service
-  - **Route**
-    - maps service URL to specific revision
-    - makes traffic splitting possible
-  - **Configuration**
-    - desired state
-  - **Revisions**
-    - Point In Time snapshot of a service
-    - stores own autoscaling configuration
-- local emulator
-  - available in gcloud, intellij etc.
-  - `gcloud beta code dev`
-
-### Serving web traffic with custom domains
-3 options:
-- global: use global external HTTP(s) load balancer (e.g. to use Cloud CDN or Cloud Armor)
-- internal: use firebase hosting (plan to stay in google cloud)
-- custom: use custom domain mapping (straightforward but limited availability)
-
-### knative Eventing (Event Processing)
-- broker: ensures every event find it's way to the consumer
-- trigger: used by the broker to decide which consumer gets this event
-- uses CloudEvent format
-
-### EventArc
-- managed service for knative eventing
-- build event driven architectures using EventArc as SaaS solution
+</details>
 
 ---
 
