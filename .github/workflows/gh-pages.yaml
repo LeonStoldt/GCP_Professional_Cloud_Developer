@@ -8,6 +8,8 @@ on:
 jobs:
   build-gh-pages:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -15,4 +17,12 @@ jobs:
       - name: Converts Markdown to HTML
         uses: jaywcjlove/markdown-to-html-cli@main
         with:
+          output: generated/index.html
           github-corners: https://github.com/LeonStoldt/GCP_Professional_Cloud_Developer
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./generated
+          publish_branch: main
