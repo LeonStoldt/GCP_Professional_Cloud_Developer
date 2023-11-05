@@ -1,8 +1,8 @@
-> Learning Path
-
----
 
 ## Section 0: Cloud Computing Fundamentals (GCP)
+<details>
+    <summary>expand</summary>
+
 > course: Cloud Fundamentals
 
 ### Cloud Computing
@@ -101,6 +101,7 @@
 ### IAM and Authentication
 #### IAM - Identity and Access Management
 > course: Cloud Fundamentals + Securing and Integrating Components of your Application
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/cloud-iam-google-cloud)
 - Google Account, Google Group, Service Account or Cloud Identity Domain
 - Control Permissions by using Roles
 - Handling of Authentication and Authorization
@@ -122,6 +123,12 @@
 	- env variable: GOOGLE_APPLICATION_CREDENTIALS
 	- check default service account
 	- error
+- IAM Policies
+  - API calls are pre-checked by IAM policies (if they are allowed)
+  - IAM policy has a list of policy bindings (always attached to a resource e.g. roles/pubsub.subscriber)
+  - policy binding: binds member/identity to a role
+  - member can have multiple roles granted
+  - member/identity can be a user, group or a service account
 
 #### [Roles](https://cloud.google.com/iam/docs/understanding-roles)
 > = collections of permissions
@@ -175,15 +182,31 @@ flowchart TD
 - Cloud Code Plugin for IDE
 - Cloud Mobile App (GUI for mobile devices)
 
+</details>
+
 ---
 
 ## Section 1: GCP Resources
+<details>
+    <summary>expand</summary>
+
 > course: Cloud Fundamentals + Getting Started With Application Development
 
 ### Cloud Source Repositories
 - Git in the Cloud
 
-### VPC - Virtual Private Cloud
+### Cloud Build
+- [Overview](https://github.com/priyankavergadia/GCPSketchnote/raw/main/images/CloudBuild.jpg)
+- fully managed service for build pipelines
+- creates docker image and push to Cloud Container Registry
+- build configuration file specifying steps of the pipeline (yaml or json)
+- each build step is a docker container
+- build status notifications can be published via pubsub
+
+### Cloud Networking
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/google-cloud-networking-overview)
+
+#### VPC - Virtual Private Cloud
 > secure, individual, private cloud-computing model hosted in a public cloud
 - segmenting networks
 - using firewall rules to restrict access
@@ -196,34 +219,100 @@ flowchart TD
 - Shared VPC tied to IAM policy
 - offers Load balancing
 
-#### Connect VPC to other Networks (e.g. On Premise)
+##### Connect VPC to other Networks (e.g. On Premise)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/choosing-network-connectivity-option-google-cloud)
 - VPN Connection
 - Direct Peering over PoP (Points of Presence)
 - Carrier Peering (if not already in PoP)
-    - On Premise Network Connection via Service Provider's Network
-    - not covered by Google SLA
+	  - On Premise Network Connection via Service Provider's Network
+	  - not covered by Google SLA
 - Dedicated Interconnect (direct Connection to Google)
 - Partner Interconnect
 
-### Cloud Load Balancing
+#### Cloud NAT
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/cloud-nat-explained)
+- provides outgoing connectivity to resources without external IP
+- regional resource (per network)
+
+#### Cloud Load Balancing
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-cloud-load-balancing)
 - distribute traffic over instances
 - managed Service by google
 - cross-region load balancing
 
-### Cloud DNS
+#### GLB - Global Load Balancer
+- handles load balancing across regions (globally)
+- Request from the client -> Frontend -> URL Map -> Backend Service -> Cloud Armor -> NEG -> Backend
+- handles traffic from the internet
+- consists of: frontend, url map and backend service
+
+##### Frontend
+- HTTPs Proxy (SSL management via Google or custom) - forwards request to URL Map
+- Forwarding rule (bind IP address to HTTPs Proxy)
+- can choose static IP address
+
+##### URL Map
+- global resource
+- provides host- and path-based routing to backend services
+
+##### Backend Services
+- contains all the services that handle incoming requests
+- global resource
+- can be a collection of backends (regional)
+- Cloud Storage Buckets are no Backend Service
+- Cloud CDN is enabled at the level of a backend service
+
+##### Serverless NEG - Network Endpoint Group
+- regional resource
+- (adapter) backend type for serverless products
+
+##### Backend
+- regional resource
+- Service that handles incoming requests (e.g. Cloud Run)
+
+#### Google Cloud Armor
+- [Overview](https://raw.githubusercontent.com/priyankavergadia/GCPSketchnote/main/images/CloudArmor.png)
+- integrated in GLB
+- enabled on the level of a backend service
+- filter using policy rules, like:
+	- allow/deny IP (range)
+	- allow/deny url path
+	- allow/deny request method
+	- etc.
+- preconfigured rules to prevent:
+	- XSS (cross-site scripting)
+	- SQL injection
+	- local/remote file inclusion attacks
+	- RCE (remote code execution) attacks
+
+#### Cloud CDN (Content Delivery Network)
+- [Overview](https://github.com/priyankavergadia/GCPSketchnote/raw/main/images/CloudCDN.jpg)
+- provide end user with content, quickly
+  - cacheable (static) content (Edge Caching)
+  - low network latency
+- enabled on the backend service
+- 3 modes
+	- cache headers: control caching and expiration via response headers (default)
+	- cache all static content: like fonts, images, audio, video etc.
+	- cache all: unconditionally caching everything
+- benefits:
+	- increase content availability
+	- improve performance
+	- lower costs for backend (handling cached requests)
+
+#### Cloud DNS
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/cloud-dns-explained)
 - managed DNS Service
 - low latency, highly availability
 
-### Cloud CDN (Content Delivery Network)
-- Edge Caching
-- low network latency
-- provide end user with content, quickly
+---
 
 ### Google API Tools
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/api-management-google-cloud)
 - **Cloud Endpoints**
 	- Distributed API management system
 	- OpenAPI Specification
-	- Supports Apps in App Engine, GKE and GCE)
+	- Supports Apps in App Engine, GKE and GCE
 - **API Gateway**
 	- Secure Access to backend services via REST API
 	- Clients consume REST APIs to implement standalone apps
@@ -263,8 +352,10 @@ flowchart TD
 - more expensive
 - not appropriate for simple API use cases
 
+---
 
 ### Cloud Storage
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/all-you-need-know-about-cloud-storage)
 - Object Storage organized in Buckets
 - stored as binary (BLOB)
 - immutable
@@ -280,27 +371,25 @@ flowchart TD
 	- Nearline (infrequently access data e.g. once a month)
 	- Coldline Storage (low cost of Nearline, access once every 90 days)
 	- Archive Storage (lowest cost, access once a year, disaster recovery)
-- 
 - Object Storage (BLOB)
 - HTTP access
-- **ideal for** large or rarely accessed data (images and videos)
 - Structure: Projects -> Buckets -> Objects
 - Bucket names are global (unique) and publicly visible
 - Storage Classes
 	- Standard
-		- no minimum
-		- frequently accessed data
-		- low data access costs / high storage cost
+  - no minimum
+  - frequently accessed data
+  - low data access costs / high storage cost
 	- Nearline
-		- minimum: 30 days
-		- e.g. moderate accessed data backup
+  - minimum: 30 days
+  - e.g. moderate accessed data backup
 	- Coldline
-		- minimum: 90 days
-		- e.g. infrequently accessed data
-	- Archive
-		- minimum: 365 days
-		- e.g. disaster recovery
-		- high data access costs / low storage costs
+  - minimum: 90 days
+  - e.g. infrequently accessed data
+    - Archive
+    - minimum: 365 days
+    - e.g. disaster recovery
+    - high data access costs / low storage costs
 - strongly consistent Storage operations
 	- read-after-write
 	- read-after-delete
@@ -323,14 +412,37 @@ flowchart TD
 	- use TLS for Transport and use HTTPS library with server certificate validation
 	- manage access via groups, not individually
 	- Validate Data transferred from/to bucket via CRC32c or MD5 checksum
+- offer multi-regional access
+- can be accessed from multiregional backend services
+- **ideal for** large or rarely accessed data (images and videos) or static website content
 
-### Cloud SQL
+### Database Overview
+- [which database should I use?](https://cloud.google.com/blog/topics/developers-practitioners/your-google-cloud-database-options-explained)
+
+#### Cloud SQL
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-cloud-sql)
 - fully managed relational Databases (e.g. MySQL, Postgres etc.)
 - auto patch / backups
 - MySQL, PostgreSQL, SQL Server
 - **ideal for** structured data
 
-### Cloud Spanner
+##### Cloud SQL with Cloud Run
+- Cloud SQL Auth Proxy Client is managed by Cloud Run
+- Handling transactions while Cloud Run scales up:
+  - limit max instances of Cloud Run
+  - pick the right Cloud SQL instance size
+  - use connection pooling
+  - always: monitor Cloud SQL instance
+```mermaid
+flowchart TD
+1(Application) --> 2(Cloud SQL Auth Proxy Client)
+2 -- SA access token --> 3(Cloud SQL Auth Proxy Server)
+3 --> 4(IAM)
+4 --> 5(Cloud SQL Database Server)
+```
+
+#### Cloud Spanner
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-cloud-spanner)
 - fully managed, mission-critical relational Database
 - scales horizontally
 - transactional consistency (strongly consistent)
@@ -338,18 +450,22 @@ flowchart TD
 - high availability
 - high IO per second
 - global scale, high availability (99,999% SLA)
-- multi-region replication
+- multi-region replication / offer multi-regional access
+- can be accessed from multiregional backend services
 - supports interleaf tables (child rows are inserted into the adjacent parent row for faster parent-child join queries)
 - **ideal for** high transactions with scale and consistency requirements
 
-### Cloud Firestore (/ Datastore)
+#### Cloud Firestore (/ Datastore)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/all-you-need-know-about-firestore-cheatsheet)
 - managed, serverless
 - NoSQL, document oriented (key-value)
 - Documents organized into collections
 - horizontally scalable
+- offer multi-regional access
+- can be accessed from multiregional backend services
 - Usage: mobile and web apps, web and server development
 
-Datastore:
+  Datastore:
 - Firestore in Datastore mode
 - Native Firestore Features cannot be used with datastore mode
 - Usage: Server Applications
@@ -377,19 +493,25 @@ Datastore:
 | **ideal for** | mobile, web, IoT, real-time applications (no heavy writes) | Server Apps (heavy read/write) |
 
 #### Memorystore (Redis or Memcached)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-memorystore)
 - for caching
+- fully managed (like Redis or Memcached)
+- requires VPC connector
+- VPC connector scale up to access Memorystore
 - **ideal for**
 	- high performance, scalable web applications
 	- gaming
 	- stream processing
 
 #### BigQuery
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/query-big-bigquery-cheat-sheet)
 - Enterprise Data Warehouse for analytics
 - managed, serverless
 - fast response times
 - **ideal for** big data processing / reporting (BI)
 
-### Cloud BigTable
+#### Cloud BigTable
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/how-big-cloud-bigtable)
 - High Performance NoSQL big data database
 - handle massive workloads at low latency
 - scale billions of rows
@@ -404,37 +526,137 @@ Datastore:
 	- asynchronous batch or synchronous real-time porocessing
 	- machine learning algorithms on data
 
-### Compute Engine - VM's
+### [Compute Engine - VM's](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-compute-engine-use-cases-security-pricing-and-more)
+- most flexibility
+- most operational effort
 - billed by second
 - automatically applies sustained-use discount
 - committed-use discounts
 - Preemtible/Spot VM'ss
-	- Preemtible VM's up to 24h
+	- Preemtible VM's up to 24h (e.g. for large compute and batch jobs)
 	- Spot VM's no max runtime
+- bring your own OS or use predefined (community) images
+- `ideal for:` lift-and-shift migrations
+
+> ### Reminder: (not GCP specific)
+> ### Containerization
+> - Container is a box containing partition, code and dependencies
+> - portable Code and OS/Hardware of Host is a black box
+> - starts as quickly as a process
+> - requires container runtime
+> 
+> ### Kubernetes
+> - Manage and orchestrate containers in a cluster with open source Kubernetes
+> - consists of: Control Plane, Nodes, Pods
+>   - Kubernetes Cluster contains nodes which contain pods
+>   - Pod (smallest unit) = Running Process/App
+>   - Service (load balanced pods) - stable Endpoint
+> - Automation of: deployment, scaling, load balancing, logging, monitoring
+> - Efficiency: Containers are placed based on Compute Nodes their Hardware Requirements
+> - Declarative: Explain what the goal state looks like
+>   - Declaration by Configuration File (deployment.yml)
+> - Self-Healing: Automatically replaces unhealthy or failed containers
+- `kubectl` cli
+
+### [Google Kubernetes Engine (GKE)](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/container-story-google-kubernetes-engine)
+- managed Kubernetes Cluster by Google
+  - reduces operational effort in comparison to non-managed Kubernetes Cluster
+  - low operational costs
+- Control Plane (managed by google)
+- Worker Nodes (auto-patched by google)
+- Pod - Group of Container that shares Network and Storage on the Node (auto-scaled by google)
+- User responsibilities:
+	- Node provisioning and management
+	- security and networking configuration
+- `GKE Autopilot` (fully managed kubernetes with even less operational effort)
+	- auto provision nodes
+	- auto applying security and network best practises
+- Hybrid or Multi-Cloud applications possible (e.g. partial On-Premise services)
+- allows using non-HTTP protocols
+
+### Hybrid- or Multi-Cloud (Anthos)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/what-are-my-hybrid-and-multicloud-deployment-options-anthos)
+- Parts of Infrastructure On-Premise and using Cloud Infrastructure
+- Anthos = Googles Hybrid- or Multi-Cloud Solution
+- Anthos uses Kubernetes and GKE On-Premise
 
 ### Cloud App Engine
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/ultimate-app-engine-cheat-sheet)
 - Only write code in self-contained workloads
-- Serverless
+- fully managed serverless compute engine
 - automatically provision servers and rapid scale on demand
 - limited Languages and Framework Support
 - SDK for local development (local emulation)
-- Standard Runtime: Containers (Java, Python, PHP, Node.js or Ruby), no SSH access
-- Flexible Runtime: Custom Configuration (custom Docker Image) (managed Compute Engine VM), SSH access
+- Standard and Flexible environment:
+  - Standard (Containers (Java, Python, PHP, Node.js or Ruby), no SSH access)
+      - restricted to certain languages
+      - for non containerized applications
+      - fast scaling up: ideal for spikes in traffic
+      - scaling down after 15 minutes of inactivity
+      - pay based on computer instanced running
+      - no management required
+  - Flexible (Custom Configuration (custom Docker Image) (managed Compute Engine VM), SSH access)
+      - no restricted languages
+      - requires containerized application
+      - better for sustained traffic
+      - slower scaling up
+      - no scale down to zero
+  - Cloud Run is the best of both environments
 
-### Cloud Run
-- Serverless (for stateless containers handling web requests / pubsub events)
-- build on Knative
-- Autoscaling
-- only charges for use
-- Write Code -> Build Image -> Run Image from Artifact Registry (GCR)
-- auto HTTPS traffic, SSL Certificate, Url Endpoint
+### [Cloud Run](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/cloud-run-story-serverless-containers)
+- Serverless (Infrastructure management is abstracted away: Provisioning, Configuring, Managing) 
+- regional service
+- automatically provides HTTPS traffic, SSL Certificate, Url Endpoint
+- no language/framework/tool restriction
+- build on [Knative](https://knative.dev/)
+- Autoscaling (scales horizontally depending on traffic)
+  - every service has an internal load balancer which provides scaling up and down services based on requests
+  - max container instances count per service is limited to 1000
+  - max concurrency can be set for configuring scaling conditions
+  - if CPU usage is too high, max concurrency will be reduced temporarily
+- only charges for use (CPU, Memory, Networking)
+- `Write Code` -> `Build Image` -> `Run Image from Artifact Registry (GCR)`
+- deploy stateless containers
+  - one container per service
+  - already built containers
+  - Source Code build automatically as a container using Buildpacks
+  - container must be in Artifact Registry
+  - new versions (deployments) are called revisions
+  - new revisions will receive all traffic after deployment (if it is healthy)
+  - every service has a unique name and unique https address automatically generated
+- revisions can be tagged (will be added as prefix to the unique url) - e.g. git commit id as tag -> tests can be executed against tagged revision first, before deploying to production
+- traffic splitting:
+	- traffic can be split over revisions
+	- user requests can be handled by multiple split revisions (no guarantees of handling by the same revision)
+- Container Lifecycle
+	- Starting: starts your application (starts container FileSystem, runs entrypoint of the container, probes web endpoint, forward request)
+	- Service Requests: serves web requests (only when there are active requests)
+	- Idle: not handling web requests (no charging, throttle CPU to nearly zero)
+	- Shutting down: stop application gracefully (cannot be controlled by the user - but application can handle SIGTERM signal to gain 10 seconds to stop gracefully e.g. for cleanup)
+	- Stopped: Container is stopped
+- IAM best practise:
+	- default cloud run service account is Editor (Basic role)
+	- create service account per cloud run service with the least necessary privilege (reduce exploitation risk)
+- `ideal for:` stateless web and event based Applications (Storage, Pubsub, Http)
 
-### Cloud Functions
+#### Buildpacks
+- Open Source Project
+- convert source code into container image without a Dockerfile
+- `pack` is a command line tool
+
+### [Cloud Functions](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+- [Overview](https://cloud.google.com/blog/topics/developers-practitioners/learn-cloud-functions-snap)
 - lightweight, event based, asynchronous computing
+- restricted to certain languages
+- no management of servers or containers
 - small, single purpose function
 - support: Node.js, Python, Go, Java, .Net, Ruby, PHP
-- default timeout 60sec
-- Use Cases:
+- default timeout 60ec
+- Priced based on function time running, request count and provisioned resources
+- Use Cases: Small piece of code responding to an event. e.g.:
 	- Webhooks (HTTP, Functions)
 	- Lightweight ETL (Storage, Functions, Firestore)
 	- IoT (PubSub, Functions)
@@ -443,60 +665,138 @@ Datastore:
 	- Synchronous (HTTP Function)
 
 ### Pub/Sub
-- managed messaging architecture for asynchronous communication
+- [Overview](https://github.com/priyankavergadia/GCPSketchnote/raw/main/images/pubsub.jpg)
+- managed messaging architecture for asynchronous (Service to Service) communication
 - REST / gRPC / Apache Kafka Connector
-- ideal for: real-time messaging (e.g. click stream data, sensor data etc.)
-- Publisher: creates messages
+- Publisher: creates / publishes messages
+  - Publisher(s) publish to topic (n publishers : 1 topic)
+  - Publisher does not need to worry about receiver
 - Subscriber: receives messages
+	- Subscriber(s) subscribe to topic (1 topic : n subscribers)
 	- Push OR Pull Method
-		- Pull
-			- Subscriber controls rate of deliveries
-			- allows parallel consumation of messages (higher throuput)
-		- Push
-			- Subscriber does not need to implement PubSub Client Library (consumes via HTTP Endpoint)
-	- confirms read message with ACK (message will be deleted fom subscriptions-queue)
+	- Pull
+    - Pub/Sub guarantees the message will be delivered at least once
+    - Receiver will send ACK if they received successfully
+    - If Receiver exceeds deadline or responds with error HTTP response, message won't be ACK'ed
+    - Retry with exponential backoff can be configured
+    - Messages will be discarded if delivery fails before maximum retention time
+    - Dead-Letter can be configured to store undelivered messages in a dead-letter topic
+  - Subscriber controls rate of deliveries
+  - allows parallel consumation of messages (higher throuput)
+	- Push
+  - Subscriber does not need to implement PubSub Client Library (consumes via HTTP POST Endpoint)
+  - confirms read message with ACK (message will be deleted fom subscriptions-queue)
 - Use Cases
 	- topic as a buffer (store messages until downstream subscriber can consume increased amount)
 	- multiple subscribers on one topic
+- message-ordering can be enabled (increases latency)
+- messages can be delivered more than once
+	- prevention e.g. via message-ID recording
+- `ideal for`: real-time messaging (e.g. click stream data, sensor data etc.)
+
+
+### Cloud Tasks
+- Service to Service communication
+- choose Cloud Tasks over Pub/Sub if one of the followings aspects are mandatory:
+	- explicit rate controls (useful for external endpoint with certain request rate threshold)
+	- longer timouts to respond to a message (> 10 min)
+- message-ordering is not available
+- no dead-letter functionality
+
+### Machine Learning Intelligence
+> course: Securing and Integrating Components of your Application
+- GCP offers pre-trained ML models
+- available via REST calls
+- no ML knowledge required
+
+</details>
 
 ---
 
-## Section 2: Containerization
+## Section 2: Build and test an application
+<details>
+    <summary>expand</summary>
+
 > course: Getting Started With Application Development
 
-### Container
-- Box containing partition, code and dependencies
-- portable Code and OS/Hardware of Host is a black box
-- starts as quickly as a process
-- requires container runtime 
+### CI (Continuous Integration)
+- Changes to the code will be automatically build and tested in a CI-Pipeline
+- often combined with CD (Continuous Delivery/Deployment) | _(see Deploy-Section)_
+- `Repository` -> `Build (and Test) System` -> `Deployment System` -> `Test/Production Environment`
+- SecDevOps = Automate Security Checks in CI/CD
 
-### Kubernetes & Google Kubernetes Engine (GKE)
-- Manage and orchestrate containers in a cluster
-- Scaling, Deploying and Rollbacks
-- Kubernetes Cluster contains nodes which contain pods
-- Pod (smallest unit) = Running Process/App
-- `kubectl` cli
-- Service (load balanced pods) - stable Endpoint
-- Declaration by Configuration File (deployment.yml)
-- GKE = managed Kubernetes Cluster by Google
+### (Code) Repository Products
+- Google Cloud Code
+- Github
+- Gitlab
+- Bitbucket
+- etc.
 
-### Hybrid- or Multi-Cloud (Anthos)
-- Parts of Infrastructure On-Premise and using Cloud Infrastructure
-- Anthos = Googles Hybrid- or Multi-Cloud Solution
-- Anthos uses Kubernetes and GKE On-Premise
+### CI/CD Pipeline Products
+- Google Cloud Build
+- Github Actions
+- Gitlab CI
+- Jenkins
+- Circle CI
+- etc.
+
+</details>
 
 ---
 
-## Section 3: Observability and Operations
+## Section 2: Deploy an application
+<details>
+    <summary>expand</summary>
+
+> course: App Deployment, Debugging, and Performance
+
+### CD - Continuous Delivery
+- `Code` -> `Build` -> `Deploy (stage)` -> `Test` -> `Release (production)` -> `Monitor`
+	- **Code**: `Google Cloud Source`, `GitHub`, `BitBucket` etc.
+	- **Build**: `Google Cloud Build`, `Jenkins`, `GitHub Actions`, `Gitlab CI`, `CircleCI` etc.
+	- **Deploy**: `Terraform`, `Ansible`, `Puppet`, `Chef` etc.
+	- **Test**: Smoketest, Acceptance tests etc.\
+	- **Release**: (same as deploy)
+	- **Monitor**: Google Cloud Monitoring
+
+### Deploy Products
+- [Terraform](https://www.terraform.io/)
+- [Ansible](https://www.ansible.com/)
+- [Puppet](https://www.puppet.com/)
+- [Chef](https://www.chef.io/)
+
+### Terraform
+- Infrastructure as Code (IaC)
+- provision GCP resources
+- HCL (Hashicorp Configuration Language)
+- consistent result (terraform state)
+- [Cloud Foundation Toolkit](https://cloud.google.com/foundation-toolkit) provide the best practises and templates: [GCP Terraform Modules](https://cloud.google.com/docs/terraform/blueprints/terraform-blueprints)
+
+### Deployment Target Products
+- Compute Engine
+- GKE - Google Kubernetes Engine
+- Cloud Run
+- Cloud Functions
+- App Engine
+
+</details>
+
+---
+
+## Section 3: Observability and Operations | Manage Application
+<details>
+    <summary>expand</summary>
+
 > course: Getting Started With Application Development
 
 ### Observability
+- [Overview](https://raw.githubusercontent.com/priyankavergadia/GCPSketchnote/main/images/CloudOps.jpg)
 - Signals: Metrics, Logs, Trace
 - Visualize and Analyze: Dashboards, Metrics/Logs Explorer, Service Monitoring, Health Checks, Profiler
 - Incidents: Alerts, Error Reporting, SLO
 
 ### Monitoring
-> "Collecting, Processing, Aggregating and displaying real-time quantitive data [...]"
+> "Collecting, Processing, Aggregating and displaying real-time quantitative data [...]"
 > e.g. Query counts, Error counts, Processing times, Server lifetimes
 > _Reference_: [Google's Site Reliability Engineering Book](https://landing.google.com/sre/books)
 
@@ -510,7 +810,7 @@ Datastore:
     - Errors (e.g. 400/500 HTTP Codes, Exceptions, Stack Traces etc.)
 - Signal Data -> Aligned Data
 - Predefined or Custom Metrics
-- Visibility for Performance, Uptime, Overall Health
+- Visibility for Performance, Uptime, Overall Health (Uptime / Health checks)
 - allow creation of Alerts
 
 ### SLI, SLO, SLA
@@ -537,32 +837,43 @@ Datastore:
 
 #### Logging
 - Examine Logs via Google's Log Explorer 
+  - System and App Logs
+  - Log Search
+  - Log based metrics
+- logging agent is based on [fluentd](https://www.fluentd.org/)
 - near real-time Analyzing
 - Export as
-    - Files to GCS (Google Cloud Storage)
-    - Messages to PubSub
-    - Data into BigQuery
+	  - Files to GCS (Google Cloud Storage)
+	  - Messages to PubSub
+	  - Data into BigQuery
 - Log Categories
-    - Audit (Admin Activity, Data Access, System Events, Access)
-    - Agent (Fluentd agent - logs from GCE, Containers etc.)
-    - Network (VPC flow, Firewall rules, NAT gateway)
-    - Service (StdOut/StdErr)
+	  - Audit (Admin Activity, Data Access, System Events, Access)
+	  - Agent (Fluentd agent - logs from GCE, Containers etc.)
+	  - Network (VPC flow, Firewall rules, NAT gateway)
+	  - Service (StdOut/StdErr)
 
 #### Error Reporting
+- Error notification
+- Error dashboard
 - Crashes/Exceptions from Services
-- Dedicated view for Errors and Stacktraces
+- Dedicated view for Errors and Stacktrace with navigation to log entry
 
 #### Cloud Trace
-- Latency from distributed Applications
-- Capture Traces from the Application
+- Latency reporting from distributed Applications
+- Capture Traces from the Application (trace requests across services)
 - Performance insights
-- Identify Changes in Performance
+- for identifying changes in performance to improve
+- automatically collected from applications running on App Engine
 
 #### Cloud Profiler
-- CPU and Heap Picture of an application
+- Analyzing CPU and Memory consumption from an application
 - Analyze Apps across GCP, On-Premise and other clouds
 - Support for Java, Go, Python, Node.js
 - Call hierarchy and resource consumption in interactive flame graph
+- Usage: Install Profiling Agent on the VM where the app runs
+- statistical profiler - agent is not always accurate
+
+</details>
 
 ---
 
@@ -582,247 +893,15 @@ Datastore:
     - Connectivity Failure
     - Corrupted Data -> Restore Data from Backup
 
-### CI/CD (Continuous Integration / Continuous Delivery)
-- Repository -> Build System -> Deployment System -> Test/Production Environment
-- SecDevOps = Automate Security Checks in CI/CD
-
-
-## Section 2: Securing and Integrating Components of your Application
-
-### Machine Learning Intelligence
-- GCP offers pre-trained ML models
-- available via REST calls
-- no ML knowledge required
-
-
 ---
-## Section 3: App Deployment, Debugging, and Performance
 
-### CD - Continuous Delivery
-- `Code` -> `Build` -> `Deploy (stage)` -> `Test` -> `Release (production)` -> `Monitor
-	- Code: Cloud Source, GitHub, BitBucket etc.
-	- Build: Cloud Build, Jenkins, GitHub Actions, CircleCI etc.
-	- Deploy: Terraform, Ansible, Puppet, Chef etc.
-	- Test: Smoketest, Acceptance tests etc.\
-	- Release: (same as deploy)
-	- Monitor: Cloud Monitoring
-
-### Kubernetes
-- Automation of: deployment, scaling, load balancing, logging, monitoring
-- Efficiency: Containers are placed based on Compute Nodes their Hardware Requirements
-- Declerative: Explain what the goal state looks like
-- Self-Healing: Automatically replaces unhealthy or failed containers
-
-### Cloud Build
-- fully managed service for build pipelines
-- creates docker image and push to Cloud Container Registry
-- build configuration file specifying steps of the pipeline (yaml or json)
-- each build step is a docker container
-- build status notifications can be published via pubsub
-
-### Terraform
-- Infrastructure as Code (IaC)
-- provision GCP resources
-- HCL (Hashicorp Configuration Language)
-- consistent result (terraform state)
-- [Cloud Foundation Toolkit](https://cloud.google.com/foundation-toolkit) provide best practises and templates: [GCP Terraform Modules](https://cloud.google.com/docs/terraform/blueprints/terraform-blueprints)
-
-### Compute Engine
-- VM's
-- most flexibility
-- most operational effort
-- Preemtible VM's for large compute and batch jobs
-- bring your own OS or use predefined (community) images
-- ideal for lift-and-shift migrations
-
-### Google Kubernetes Engine (GKE)
-- managed Kubernetes service (reduces operational effort in comparison to non-managed Kubernetes Cluster)
-- low operational costs
-- Control Plane (managed by google)
-- Worker Nodes (auto-patched by google)
-- Pod - Group of Container that shares Network and Storage on the Node (auto-scaled by google)
-- User responsibilities:
-	- Node provisioning and management
-	- security and networking configuration
-- GKE Autopilot (fully managed kubernetes with even less operational effort)
-	- auto provision nodes
-	- auto applying security and network best practises
-- Hybrid or Multi-Cloud applications possible (e.g. partial On-Premise services)
-- allows using non-HTTP protocols
-
-### Cloud Run
-- Infrastructure management is abstracted away (Provisioning, Configuring, Managing)
-- automatically scales horizontally depending on traffic
-- only pay (CPU, Memory, Networking) when it's running
-- deploy stateless containers
-	- already built containers
-	- Source Code build automatically as a container using Buildpacks
-- no language/framework/tool restriction
-- Use Case: Web and Event based Applications (Storage, Pubsub, Http)
-
-### Cloud Functions
-- no management of servers or containers
-- event driven code will be executed
-- Use Case: Small piece of code responding to an event. e.g.:
-	- Lightweight ETL (Extract Transform Load) Processes
-	- Webhooks (Http calls)
-	- Processing of messaging events
-- Priced based on function time running, request count and provisioned resources
-- restricted to certain languages
-
-### AppEngine
-- fully managed serverless compute engine
-- standard and flexible environment
-- standard
-	- restricted to certain languages
-	- for non containerized applications
-	- fast scaling up: ideal for spikes in traffic
-	- scaling down after 15 minutes of inactivity
-	- pay based on computer instanced running
-	- no management required
-- flexible
-	- no restricted languages
-	- requires containerized application
-	- better for sustained traffic
-	- slower scaling up
-	- no scale down to zero
-- Cloud Run is the best of both environments
-
-#### Monitoring and Performance Tuning
-> Google Cloud Operation Suite
-
-#### Cloud Logging
-- System and App Logs
-- Log Search
-- Log based metrics
-- logging agent is based on fluentd
-
-#### Cloud Monitoring
-- System and App metrics
-- Uptime / Health checks
-- Dashboards
-- Alerts
-- Identity SLI's (Service Level Indicators) and Objectives to monitor (e.g. latency)
-- 4 Golden Signals to monitor:
-	- Latency
-	- Traffic (HTTP requests / second)
-	- Errors (application or policy errors)
-	- Saturation (capacity of resources)
-
-#### Error Reporting
-- Error notification
-- Error dashboard
-- View Stacktrace and navigate to log entry
-
-#### Cloud Trace
-- Latency reporting
-- tracing app requests (across services)
-- automatically collected from applications running on App Engine
-- can be used to improve performance of applications
-
-#### Cloud Profiler
-- Analyzing CPU and Memory consumption from an application
-- Usage: Install Profiling Agent on the VM where the app runs
-- statistical profiler - agent is not always accurate
-
----
 ## Section 4: Application Development with Cloud Run
-
-### Cloud Run
-- regional service
-- every service has an internal load balancer which provides scaling up and down services based on requests
-- max container instances count per service is limited to 1000
-- one container per service
-- container must be in Artifact Registry
-- new versions (deployments) are called revisions
-- every service has a unique name and unique https address automatically generated
-- Container Lifecycle
-	- Starting: starts your application (starts container FileSystem, runs entrypoint of the container, probes web endpoint, forward request)
-	- Service Requests: serves web requests (only when there are active requests)
-	- Idle: not handling web requests (no charging, throttle CPU to nearly zero)
-	- Shutting down: stop application gracefully (cannot be controlled by the user - but application can handle SIGTERM signal to gain 10 seconds to stop gracefully e.g. for cleanup)
-	- Stopped: Container is stopped
-- max concurrency can be set for configuring scaling conditions
-- if CPU usage is too high, max concurrency will be reduced temporarily
-- new revisions will receive all traffic after deployment (it it is healthy)
-- revisions can be tagged (will be added as prefix to the unique url) - e.g. git commit id as tag -> tests can be executed against tagged revision first, before deploying to production
-- traffic splitting:
-	- traffic can be split over revisions
-	- user requests can be handled by multiple split revisions (no guarantees of handling by the same revision)
-- IAM best practise: create service account per cloud run service with least necessary privilege (reduce exploitation risk)
-- default cloud run service account is Editor (Basic role)
-
-### Buildpacks
-- Open Source Project
-- convert source code into container image without a Dockerfile
-- `pack` is a command line tool
-
-### IAM Policy
-- API calls are pre-checked by IAM policies (if they are allowed)
-- IAM policy has a list of policy bindings (always attached to a resource e.g. roles/pubsub.subscriber)
-- policy binding: binds member/identity to a role
-- member can have multiple roles granted
-- member/identity can be a user, group or a service account
-
-### GLB - Global Load Balancer
-- handles load balancing across regions (globally)
-- Request from the client -> Frontend -> URL Map -> Backend Service -> Cloud Armor -> NEG -> Backend
-- handles traffic from the internet
-
-#### Frontend
-- can choose static IP address
-- HTTPs Proxy (SSL management via google or custom) - forwards request to URL Map
-- Forwarding rule (bind IP address to HTTPs Proxy)
-
-#### URL Map
-- global resource
-- provides host- and path-based routing to backend services
-
-#### Backend Services
-- global resource
-- can be a collection of backends (regional)
-- Cloud Storage Buckets are no Backend Service
-- Cloud CDN is enabled at the level of a backend service
-
-#### Serverless NEG - Network Endpoint Group
-- regional resource
-- (adapter) backend type for serverless products
-
-#### Backend
-- regional resource
-- Service that handles incoming requests (e.g. Cloud Run)
-
-### Cloud CDN (Content Delivery Network)
-- cachable (static) content
-- enabled on the backend service
-- 3 modes
-	- cache headers: control caching and expiration via response headers (default)
-	- cache all static content: like fonts, images, audio, video etc.
-	- cache all: unconditionally caching everything
-- benefits:
-	- increase content availability
-	- improve performance
-	- lower costs for backend (handling cached requests)
 
 ### Controlling Inbound / Outbound traffic
 - filter ingress traffic via
 	- Google Cloud Armor
 	- Ingress proxy
 	- IAM
-
-### Google Cloud Armor
-- integrated in GLB
-- enabled on the level of a backend service
-- filter using policy rules, like:
-	- allow/deny IP (range)
-	- allow/deny url path
-	- allow/deny request method
-	- etc.
-- preconfigured rules to prevent:
-	- XSS (cross-site scripting)
-	- SQL injection
-	- local/remote file inclusion attacks
-	- RCE (remote code execution) attacks
 
 ### Ingress Proxy
 - handles traffic from internal environment
@@ -847,53 +926,6 @@ Datastore:
 	- route all traffic through VPC connector (even if destination is external)
 	- a) restrict outgoing requests via VPC networks firewall rules
 	- b) use static outbound IP address instead one from the public pool (e.g. use case use static IP address for firewall allow rules)
-
-### Cloud SQL
-- Application -> Cloud SQL Auth Proxy Client -(SA access token)-> Cloud SQL Auth Proxy Server -> IAM -> Cloud SQL Database Server
-- Cloud SQL Auth Proxy Client is managed by Cloud Run
-- Handling transactions while Cloud Run scales up:
-	- limit max instances of Cloud Run
-	- pick the right Cloud SQL instance size
-	- use connection pooling
-	- always: monitor Cloud SQL instance
-
-### Memorystore
-- fully managed (like Redis or Memcached)
-- requires VPC connector
-- VPC connector scale up to access Memorystore
-
-### Cloud Storage / Spanner / Firestore
-- offer multi-regional access
-- can be accessed from multiregional backend services
-
-### Pub/Sub
-- asynchronous Service to Service communication
-- publisher: publish messages
-- subscriber: receive messages
-- Publisher(s) publish to topic (n publishers : 1 topic)
-- Subscriber(s) subscribe to topic (1 topic : n subscribers)
-- Pull- or Push-Subscription
-	- Push: HTTP POST request to service endpoint with message in the body
-	- Pull: 
-- Pub/Sub acts as a buffer
-- Publisher does not need to worry about receiver
-- Pub/Sub guarantees the message will be delivered at least once
-- Receiver will send ACK if they received successfully
-- If Receiver exeeds deadline or responds with error HTTP response, message won't be ACK'ed
-- Retry with exponential backoff can be configured
-- Messages will be discarded if delivery fails before maximum retention time
-- Dead-Letter can be configured to store undelivered messages in a dead-letter topic
-- message-ordering can be enabled (increases latency)
-- messages can be delivered more than once
-	- prevention e.g. via message-ID recording
-
-### Cloud Tasks
-- Service to Service communication
-- choose Cloud Tasks over Pub/Sub if one of the followings aspects are mandatory:
-	- explicit rate controls (useful for external endpoint with certain request rate threshold)
-	- longer timouts to respond to a message (> 10 min)
-- message-ordering is not available
-- no dead-letter functionality
 
 ### Cloud Workflows
 - define worklows in configuration (yaml / json) file
